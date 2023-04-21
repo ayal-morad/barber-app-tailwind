@@ -18,7 +18,7 @@ function supMessage(mes) {
   return st;
 }
 
-function LoginBoby() {
+function LoginBoby({ navigation }) {
   const [Emessage, setEMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ function LoginBoby() {
 
   return (
     <View className="flex-col items-center justify-center">
-      <Text className="mt-48">{Emessage}</Text>
+      <Text className="mt-48 text-red-500">{Emessage}</Text>
       <TextInput
         onChangeText={(current) => setEmail(current)}
         placeholder="enter your email"
@@ -54,8 +54,13 @@ function LoginBoby() {
         </View>
       </TouchableOpacity>
       <View className="flex-row mt-2">
-        <Text>to signup click</Text>
-        <Text className="text-blue-600"> here</Text>
+        <Text>to signup click </Text>
+        <Text
+          className="text-blue-600"
+          onPress={() => navigation.navigate("registerPage")}
+        >
+          here
+        </Text>
       </View>
     </View>
   );
