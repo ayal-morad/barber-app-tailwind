@@ -1,9 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCTUOunp6CFyfGvSZJim4-NsSspOezn_hM",
@@ -29,10 +25,4 @@ export function register(email, password) {
     .catch((error) => {
       const errorM = error.message;
     });
-}
-
-export function login(email, password) {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentia) => {})
-    .catch((error) => {});
 }

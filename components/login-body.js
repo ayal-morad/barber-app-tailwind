@@ -1,18 +1,49 @@
 import { useState } from "react";
-import { register, login } from "../firebase";
-import { Text, View, TextInput, Button, TouchableOpacity } from "react-native";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { Text, View, TextInput, TouchableOpacity } from "react-native";
+
+function supMessage(mes) {
+  const len = mes.length;
+  let st = "";
+  let i = 0;
+  while (i < len && mes[i] != "/") {
+    i++;
+  }
+  i++;
+  while (i < len && mes[i] != ")") {
+    st += mes[i];
+    i++;
+  }
+  return st;
+}
 
 function LoginBoby() {
+  const [Emessage, setEMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  function login(email, password) {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredentia) => {
+        const US = userCredentia.user;
+      })
+      .catch((error) => {
+        console.log(supMessage(error.message));
+        setEMessage(supMessage(error.message));
+      });
+  }
+
   return (
     <View className="flex-col items-center justify-center">
+      <Text className="mt-48">{Emessage}</Text>
       <TextInput
         onChangeText={(current) => setEmail(current)}
         placeholder="enter your email"
-        className="border-black border-2 w-4/5 h-16 pl-2 mt-48 mb-7 rounded-md"
+        className="border-black border-2 w-4/5 h-16 pl-2 mb-7 rounded-md"
       ></TextInput>
       <TextInput
+        secureTextEntry={true}
         onChangeText={(current) => setPassword(current)}
         placeholder="enter your password"
         className="border-black border-2 w-4/5 h-16 pl-2 rounded-md"

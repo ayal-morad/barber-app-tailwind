@@ -4,11 +4,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 
 function NavBar() {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState("hello");
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
         setUser(user.email);
       }
     });
@@ -27,7 +26,7 @@ function NavBar() {
           <Text>Firas barber!</Text>
         </View>
       </View>
-      <Text>{user == null ? "hello" : user}</Text>
+      <Text>{user}</Text>
     </View>
   );
 }

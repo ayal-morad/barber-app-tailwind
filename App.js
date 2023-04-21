@@ -1,5 +1,3 @@
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
 import { SafeAreaView } from "react-native";
 import LoginBoby from "./components/login-body";
 import NavBar from "./components/nav_bar";
