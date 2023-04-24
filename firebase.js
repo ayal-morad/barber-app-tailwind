@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, ref, set, push, Database } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCTUOunp6CFyfGvSZJim4-NsSspOezn_hM",
@@ -22,22 +22,4 @@ export const auth = getAuth(app);
 export const database = getDatabase(app);
 
 //create an account in firebase
-export function register(email, password, name, phone) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredentia) => {
-      const US = userCredentia.user;
-      set(ref(database, "FirasApp/Users/" + US.uid), {
-        username: name,
-        phoneNumber: phone,
-      })
-        .then(() => {
-          console.log("tof8na");
-        })
-        .catch(() => {
-          console.log("aklna 5ra");
-        });
-    })
-    .catch((error) => {
-      const errorM = error.message;
-    });
-}
+

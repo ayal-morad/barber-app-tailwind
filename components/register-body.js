@@ -1,13 +1,49 @@
 import { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text } from "react-native";
-import { register } from "../firebase";
+import { database, auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { set, ref } from "firebase/database";
+import { supMessage } from "./login-body";
+
 function RegisterBody({ navigation }) {
+  const [errorMessage, setErrorMessage] = useState(() => "");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  function register(email, password, name, phone) {
+    if (name.length < 3) {
+      setErrorMessage("user name not correct");
+      return;
+    }
+    if (phone.length != 10 || (phone[0] != '0' && phone[1] != '5')) {
+      setErrorMessage("phone number not correct");
+      return;
+    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const US = userCredential.user;
+        set(ref(database, "FirasApp/Users/" + US.uid), {
+          username: name,
+          phoneNumber: phone,
+        })
+          .then(() => {
+            console.log("tof8na");
+          })
+          .catch(() => {
+            console.log("aklna 5ra");
+          });
+      })
+      .catch((error) => {
+        setErrorMessage(supMessage(error.message));
+      });
+  }
+
   return (
     <View className="flex-col items-center justify-center mt-20">
+      {/* error text */}
+      <Text className="text-red-500">{errorMessage}</Text>
       {/* name TextInput */}
 
       <TextInput

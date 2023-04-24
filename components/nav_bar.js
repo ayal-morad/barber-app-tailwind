@@ -1,14 +1,28 @@
 import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, database } from "../firebase";
+import { ref, get, child } from "firebase/database";
 
 function NavBar() {
+  const myRef = ref(database)
   const [user, setUser] = useState("hello");
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user.email);
+        get(child(myRef, `FirasApp/Users/${user.uid}`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            snapshot.forEach((child) => {
+              if (child.key === "username") {
+                setUser(child.val());
+              }
+            })
+          } else {
+            console.log("No data available");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
       }
     });
   });

@@ -4,7 +4,9 @@ import RegisterBody from "../components/register-body";
 function RegisterPage({ navigation }) {
   return (
     <View>
-      <NavBar></NavBar>
+      <View className="bg-white pb-2">
+        <NavBar></NavBar>
+      </View>
       <RegisterBody navigation={navigation}></RegisterBody>
     </View>
   );

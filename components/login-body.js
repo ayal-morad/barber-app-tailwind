@@ -3,7 +3,7 @@ import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 
-function supMessage(mes) {
+export function supMessage(mes) {
   const len = mes.length;
   let st = "";
   let i = 0;
