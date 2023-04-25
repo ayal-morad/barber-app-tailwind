@@ -3,26 +3,71 @@ import { Image, Text, View } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, database } from "../firebase";
 import { ref, get, child } from "firebase/database";
+import { WrenchScrewdriverIcon, UserIcon } from "react-native-heroicons/solid";
 
 function NavBar() {
+
   const myRef = ref(database)
-  const [user, setUser] = useState("hello");
+  const [user, setUser] = useState(() => {
+    if (auth.currentUser) {
+      get(child(myRef, `FirasApp/Users/${auth.currentUser.uid}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          let flg = false;
+          snapshot.forEach((child) => {
+            if (child.key === 'username') {
+              return child.val();
+            }
+            if (child.key === 'IsAdmin') {
+              console.log(child.val() + "admin");
+              if (child.val() === true) {
+                setIsAdmin(true);
+                flg = true;
+              }
+            }
+          })
+          if (!flg) {
+            setIsAdmin(false);
+          }
+        } else {
+          return "";
+        }
+      }).catch((error) => {
+        console.log(error);
+      })
+    } else {
+      return "";
+    }
+  });
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         get(child(myRef, `FirasApp/Users/${user.uid}`)).then((snapshot) => {
           if (snapshot.exists()) {
+            let flg = false;
             snapshot.forEach((child) => {
               if (child.key === "username") {
                 setUser(child.val());
               }
+              if (child.key === 'IsAdmin') {
+                if (child.val() === true) {
+                  setIsAdmin(true);
+                  flg = true;
+                }
+              }
             })
+            if (!flg) {
+              setIsAdmin(false);
+            }
           } else {
             console.log("No data available");
+            setUser("");
           }
         }).catch((error) => {
           console.error(error);
         });
+      } else {
+        setUser(() => "");
       }
     });
   });
@@ -41,6 +86,10 @@ function NavBar() {
         </View>
       </View>
       <Text>{user}</Text>
+      {
+        isAdmin ? <WrenchScrewdriverIcon color="black" className="h-8 w-8" />
+          : <UserIcon color="black" className="h-7 w-7" />
+      }
     </View>
   );
 }

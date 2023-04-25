@@ -25,8 +25,8 @@ function LoginBoby({ navigation }) {
 
   function login(email, password) {
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentia) => {
-        const US = userCredentia.user;
+      .then((userCredential) => {
+        navigation.navigate("homePage");
       })
       .catch((error) => {
         console.log(supMessage(error.message));

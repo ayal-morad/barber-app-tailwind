@@ -27,10 +27,10 @@ function RegisterBody({ navigation }) {
         set(ref(database, "FirasApp/Users/" + US.uid), {
           username: name,
           phoneNumber: phone,
+        }).then(() => {
+          console.log("tof8na");
+          navigation.navigate("homePage");
         })
-          .then(() => {
-            console.log("tof8na");
-          })
           .catch(() => {
             console.log("aklna 5ra");
           });
