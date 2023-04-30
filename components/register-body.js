@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text } from "react-native";
 import { database, auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { set, ref } from "firebase/database";
 import { supMessage } from "./login-body";
 
@@ -17,7 +20,7 @@ function RegisterBody({ navigation }) {
       setErrorMessage("user name not correct");
       return;
     }
-    if (phone.length != 10 || (phone[0] != '0' && phone[1] != '5')) {
+    if (phone.length != 10 || (phone[0] != "0" && phone[1] != "5")) {
       setErrorMessage("phone number not correct");
       return;
     }
@@ -27,13 +30,12 @@ function RegisterBody({ navigation }) {
         set(ref(database, "FirasApp/Users/" + US.uid), {
           username: name,
           phoneNumber: phone,
-        }).then(() => {
-          console.log("tof8na");
-          navigation.navigate("homePage");
         })
-          .catch(() => {
-            console.log("aklna 5ra");
-          });
+          .then(() => {
+            sendEmailVerification(auth.currentUser).then(() => {});
+            navigation.navigate("homePage");
+          })
+          .catch(() => {});
       })
       .catch((error) => {
         setErrorMessage(supMessage(error.message));

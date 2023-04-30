@@ -2,38 +2,36 @@ import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, database } from "../firebase";
-import { ref, get, child } from "firebase/database";
+import { ref, get, child, onValue } from "firebase/database";
 import { WrenchScrewdriverIcon, UserIcon } from "react-native-heroicons/solid";
 
 function NavBar() {
-
-  const myRef = ref(database)
+  const myRef = ref(database);
   const [user, setUser] = useState(() => {
     if (auth.currentUser) {
-      get(child(myRef, `FirasApp/Users/${auth.currentUser.uid}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          let flg = false;
-          snapshot.forEach((child) => {
-            if (child.key === 'username') {
-              return child.val();
-            }
-            if (child.key === 'IsAdmin') {
-              console.log(child.val() + "admin");
-              if (child.val() === true) {
-                setIsAdmin(true);
-                flg = true;
+      get(child(myRef, `FirasApp/Users/${auth.currentUser.uid}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            let flg = false;
+            snapshot.forEach((child) => {
+              if (child.key === "username") {
+                return child.val();
               }
+              if (child.key === "IsAdmin") {
+                if (child.val() === true) {
+                  setIsAdmin(true);
+                  flg = true;
+                }
+              }
+            });
+            if (!flg) {
+              setIsAdmin(false);
             }
-          })
-          if (!flg) {
-            setIsAdmin(false);
+          } else {
+            return "";
           }
-        } else {
-          return "";
-        }
-      }).catch((error) => {
-        console.log(error);
-      })
+        })
+        .catch((error) => {});
     } else {
       return "";
     }
@@ -42,35 +40,48 @@ function NavBar() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        get(child(myRef, `FirasApp/Users/${user.uid}`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            let flg = false;
-            snapshot.forEach((child) => {
-              if (child.key === "username") {
-                setUser(child.val());
-              }
-              if (child.key === 'IsAdmin') {
-                if (child.val() === true) {
-                  setIsAdmin(true);
-                  flg = true;
+        get(child(myRef, `FirasApp/Users/${user.uid}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              let flg = false;
+              snapshot.forEach((child) => {
+                if (child.key === "username") {
+                  setUser(child.val());
                 }
+                if (child.key === "IsAdmin") {
+                  if (child.val() === true) {
+                    setIsAdmin(true);
+                    flg = true;
+                  }
+                }
+              });
+              if (!flg) {
+                setIsAdmin(false);
               }
-            })
-            if (!flg) {
-              setIsAdmin(false);
+            } else {
+              setUser("");
             }
-          } else {
-            console.log("No data available");
-            setUser("");
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
+          })
+          .catch((error) => {});
       } else {
         setUser(() => "");
       }
     });
   });
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      onValue(
+        ref(database, `FirasApp/Users/${auth.currentUser.uid}/username`),
+        (snapshot) => {
+          if (snapshot.exists()) {
+            setUser(snapshot.val());
+          }
+        }
+      );
+    }
+  }, []);
+
   return (
     <View className="flex-row mt-11 mx-1">
       <View className="flex-row flex-1">
@@ -85,11 +96,14 @@ function NavBar() {
           <Text>Firas barber!</Text>
         </View>
       </View>
-      <Text>{user}</Text>
-      {
-        isAdmin ? <WrenchScrewdriverIcon color="black" className="h-8 w-8" />
-          : <UserIcon color="black" className="h-7 w-7" />
-      }
+      <View className="flex-row mt-2">
+        <Text>{user}</Text>
+        {isAdmin ? (
+          <WrenchScrewdriverIcon color="black" className="h-8 w-8" />
+        ) : (
+          <UserIcon color="black" className="h-7 w-7" />
+        )}
+      </View>
     </View>
   );
 }
