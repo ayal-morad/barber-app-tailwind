@@ -78,7 +78,9 @@ export function HomePage({ navigation }) {
             className="w-full items-center"
             onPress={() => {
               if (IsAdmin) {
-                navigation.navigate("adminPage");
+                navigation.navigate("adminPage", {
+                  dn: "FirasData",
+                });
               } else {
                 if (isVirfid) {
                   navigation.navigate("bookingPage", { dataName: "FirasData" });
@@ -111,7 +113,9 @@ export function HomePage({ navigation }) {
             className="w-full items-center mt-5"
             onPress={() => {
               if (IsAdmin) {
-                navigation.navigate("adminPage");
+                navigation.navigate("adminPage", {
+                  dn: "JolianData",
+                });
               } else {
                 if (isVirfid) {
                   navigation.navigate("bookingPage", {

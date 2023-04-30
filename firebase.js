@@ -92,4 +92,7 @@ export function getAllSnapshot(dataName) {
   return null;
 }
 
-// set the role boolean to true
+// set the phone number
+export function resetPhoneNumber(path, str) {
+  set(ref(database, path), str).then().catch();
+}

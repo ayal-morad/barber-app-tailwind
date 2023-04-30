@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { BanknotesIcon } from "react-native-heroicons/solid";
 
-export default function AdminPage({ navigation }) {
-  const [dataName, setDataName] = useState("FirasData");
+export default function AdminPage({ navigation, route }) {
+  const { dn } = route.params;
+  const [dataName, setDataName] = useState(dn);
   const [day, setDay] = useState("sunday");
   const [isWork, setIsWork] = useState("No");
   const [isLoading, setIsLoading] = useState(() => true);
@@ -266,7 +267,6 @@ export default function AdminPage({ navigation }) {
               dataName: dataName,
               day: day,
               date: date,
-              times: times,
             });
           }}
         >

@@ -14,6 +14,7 @@ import BookingPage from "./pages/bookingPage";
 import EditDataPage from "./pages/editDataPage";
 import UserProfilePage from "./pages/userProfilePage";
 import ShowdataPage from "./pages/showdataPage";
+import EditClientPage from "./pages/editClientPage";
 {
   /* import pages */
 }
@@ -67,6 +68,11 @@ export default function App() {
         <Stack.Screen
           name="showDataPage"
           component={ShowdataPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="editClientPage"
+          component={EditClientPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
