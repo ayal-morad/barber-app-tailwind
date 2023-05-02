@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-  Alert,
-} from "react-native";
+import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import BarberCard from "../components/barberCard";
 import { database } from "../firebase";
 import { ref, get, child } from "firebase/database";
@@ -35,12 +29,14 @@ export function HomePage({ navigation }) {
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, (user) => {
       if (user) {
-        auth.currentUser.reload();
+        user.reload();
         setIsVerfid(user.emailVerified);
       }
     });
-    return unsubscribe;
-  });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   {
     /* get the IsAdmin from the data base */
@@ -62,101 +58,101 @@ export function HomePage({ navigation }) {
   getClintAdmin();
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://i.pinimg.com/564x/94/eb/fd/94ebfd36d48139122e838e9b20497076.jpg",
-      }}
-      resizeMode="cover"
-      className="flex-1 absolute top-0 bottom-0 left-0 right-0"
-    >
-      <View className="flex-1 items-center mt-5">
-        <View className="absolute top-8 border-black border-2 rounded-lg px-7 py-1 bg-black">
-          <Text className="text-white">Chose you'r barber</Text>
-        </View>
-        <View className="w-full flex-col mt-24">
-          <TouchableOpacity
-            className="w-full items-center"
-            onPress={() => {
-              if (IsAdmin) {
-                navigation.navigate("adminPage", {
-                  dn: "FirasData",
-                });
-              } else {
-                if (isVirfid) {
-                  navigation.navigate("bookingPage", { dataName: "FirasData" });
-                } else {
-                  if (!weSentMessage) {
-                    sendEmailVerification(auth.currentUser)
-                      .then(() => {
-                        setweSentMessage(true);
-                      })
-                      .catch(() => {});
-                  }
-
-                  Alert.alert(
-                    "Email Security",
-                    "You'r email is not verified , pleaze check you'r email box we sent you a verifition link",
-                    [
-                      {
-                        text: "OK",
-                      },
-                    ],
-                    { cancelable: false }
-                  );
-                }
-              }
-            }}
-          >
-            <BarberCard name="firas"></BarberCard>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="w-full items-center mt-5"
-            onPress={() => {
-              if (IsAdmin) {
-                navigation.navigate("adminPage", {
-                  dn: "JolianData",
-                });
-              } else {
-                if (isVirfid) {
-                  navigation.navigate("bookingPage", {
-                    dataName: "JolianData",
-                  });
-                } else {
-                  if (!weSentMessage) {
-                    sendEmailVerification(auth.currentUser)
-                      .then(() => {
-                        setweSentMessage(true);
-                      })
-                      .catch(() => {});
-                  }
-
-                  Alert.alert(
-                    "Email Security",
-                    "You'r email is not verified , pleaze check you'r email box we sent you a verifition link",
-                    [
-                      {
-                        text: "OK",
-                      },
-                    ],
-                    { cancelable: false }
-                  );
-                }
-              }
-            }}
-          >
-            <BarberCard name="jolian"></BarberCard>
-          </TouchableOpacity>
-        </View>
+    <View className="flex-1 items-center">
+      <View className="bg-gray-600 w-full h-20"></View>
+      <View className="bg-gray-600 w-full h-1/3 rounded-b-full items-center">
+        <Text className="text-black font-bold">Barber Shop</Text>
+        <Text className="text-black font-bold text-2xl">Book now</Text>
+        <Image
+          source={{
+            uri: "https://i.pinimg.com/564x/5e/9d/79/5e9d79ae91a5a946ac8695a1d45e05c2.jpg",
+          }}
+          className="absolute -bottom-10 h-24 w-24 rounded-full"
+        />
+      </View>
+      <View className="w-full flex-col mt-24">
         <TouchableOpacity
-          className="absolute bottom-7 right-3"
-          onPress={() => navigation.navigate("userProfilePage")}
+          className="w-full items-center"
+          onPress={() => {
+            if (IsAdmin) {
+              navigation.navigate("adminPage", {
+                dn: "FirasData",
+              });
+            } else {
+              if (isVirfid) {
+                navigation.navigate("bookingPage", { dataName: "FirasData" });
+              } else {
+                if (!weSentMessage) {
+                  sendEmailVerification(auth.currentUser)
+                    .then(() => {
+                      setweSentMessage(true);
+                    })
+                    .catch(() => {});
+                }
+
+                Alert.alert(
+                  "Email Security",
+                  "You'r email is not verified , pleaze check you'r email box we sent you a verifition link",
+                  [
+                    {
+                      text: "OK",
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              }
+            }
+          }}
         >
-          <View className="h-14 w-14 rounded-full bg-white items-center justify-center">
-            <Bars3Icon color={"#68BBE3"} />
-          </View>
+          <BarberCard name="firas"></BarberCard>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="w-full items-center mt-5"
+          onPress={() => {
+            if (IsAdmin) {
+              navigation.navigate("adminPage", {
+                dn: "JolianData",
+              });
+            } else {
+              if (isVirfid) {
+                navigation.navigate("bookingPage", {
+                  dataName: "JolianData",
+                });
+              } else {
+                if (!weSentMessage) {
+                  sendEmailVerification(auth.currentUser)
+                    .then(() => {
+                      setweSentMessage(true);
+                    })
+                    .catch(() => {});
+                }
+
+                Alert.alert(
+                  "Email Security",
+                  "You'r email is not verified , pleaze check you'r email box we sent you a verifition link",
+                  [
+                    {
+                      text: "OK",
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              }
+            }
+          }}
+        >
+          <BarberCard name="jolian"></BarberCard>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+      <TouchableOpacity
+        className="absolute bottom-7 right-3"
+        onPress={() => navigation.navigate("userProfilePage")}
+      >
+        <View className="h-14 w-14 rounded-full bg-white items-center justify-center border-2 border-blue-400">
+          <Bars3Icon color={"#68BBE3"} />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 }
 

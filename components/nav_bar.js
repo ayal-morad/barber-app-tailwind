@@ -92,7 +92,7 @@ function NavBar() {
           className="w-14 h-14 rounded-full"
         />
         <View className="ml-1">
-          <Text className="text-xl font-bold">Wellcome Back</Text>
+          <Text className="text-xl font-bold">Welcome Back</Text>
           <Text>Firas barber!</Text>
         </View>
       </View>

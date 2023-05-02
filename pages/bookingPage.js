@@ -80,6 +80,7 @@ export default function BookingPage({ route, navigation }) {
   });
 
   useEffect(() => {
+    setLoading(() => true);
     let snp = [];
     get(child(ref(database), "FirasApp/" + dataName + "/" + bookingDay))
       .then((snapshot) => {
@@ -95,7 +96,7 @@ export default function BookingPage({ route, navigation }) {
                 // times[["12;00" , false] , ["12;30" , false] , ["13;00" , true]]
                 snp.push([key, value]);
               });
-              setTimeArray(snp);
+              setTimeArray(() => snp);
             }
             if (child.key == "isWorkDay") {
               setIsDayWorkDay(child.val());
@@ -109,18 +110,13 @@ export default function BookingPage({ route, navigation }) {
         }
       })
       .catch(() => []);
+    setLoading(() => false);
   }, [bookingDay]);
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://i.pinimg.com/564x/94/eb/fd/94ebfd36d48139122e838e9b20497076.jpg",
-      }}
-      resizeMode="cover"
-      className="flex-1 absolute top-0 bottom-0 left-0 right-0"
-    >
+    <View>
       <View className="h-20">
-        <ScrollView horizontal={true}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <View className="flex-row mt-3 mr-2 ml-2">
             {weekday.map((str, ind) => {
               return (
@@ -138,9 +134,14 @@ export default function BookingPage({ route, navigation }) {
                     }
                   >
                     <DayButtonContainer day={str} />
-                    {bookingDay == str && (
-                      <Text className="text-white font-bold">{toDayDate}</Text>
-                    )}
+                    {bookingDay == str &&
+                      (!loading ? (
+                        <Text className="text-Black font-bold">
+                          {toDayDate}
+                        </Text>
+                      ) : (
+                        <ActivityIndicator color={"#000000"} />
+                      ))}
                   </View>
                 </TouchableOpacity>
               );
@@ -169,14 +170,6 @@ export default function BookingPage({ route, navigation }) {
           <ActivityIndicator color={"#ffffff"} />
         )}
       </ScrollView>
-      <TouchableOpacity
-        className="absolute bottom-7 right-3"
-        onPress={() => navigation.navigate("userProfilePage")}
-      >
-        <View className="h-14 w-14 rounded-full bg-white items-center justify-center border-blue-400 border-2">
-          <Bars3Icon color={"#68BBE3"} />
-        </View>
-      </TouchableOpacity>
-    </ImageBackground>
+    </View>
   );
 }

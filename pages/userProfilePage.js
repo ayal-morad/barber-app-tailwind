@@ -1,17 +1,23 @@
 import {
   Text,
   View,
+  ScrollView,
+  Image,
   ImageBackground,
   TouchableOpacity,
+  TextInput,
   Alert,
 } from "react-native";
 import { resetPhoneNumber } from "../firebase";
 import { auth, database } from "../firebase";
 import { get, child, ref } from "firebase/database";
+import {
+  CheckIcon,
+  ClipboardDocumentCheckIcon,
+} from "react-native-heroicons/outline";
 import { useState, useEffect } from "react";
-import { TextInput } from "react-native-gesture-handler";
 export default function UserProfilePage() {
-  const [myAppointment, setAppointment] = useState("");
+  const [myAppointment, setAppointment] = useState("Non");
   const [userPhoneNumber, setUserPhoneNumber] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   useEffect(() => {
@@ -22,7 +28,7 @@ export default function UserProfilePage() {
             let flg = false;
             if (child.key == "IsBooked") {
               if (child.val() == false) {
-                setAppointment("Non");
+                setAppointment(() => "Non");
               } else {
                 flg = true;
                 const str = child.val();
@@ -57,14 +63,11 @@ export default function UserProfilePage() {
                   i++;
                 }
                 st += str.substring(ind + 1);
-                setAppointment(st);
+                setAppointment(() => st);
               }
             }
             if (child.key == "phoneNumber") {
               setUserPhoneNumber(child.val());
-            }
-            if (!flg) {
-              setAppointment("Non");
             }
           }
         });
@@ -75,50 +78,71 @@ export default function UserProfilePage() {
   }, []);
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://i.pinimg.com/564x/94/eb/fd/94ebfd36d48139122e838e9b20497076.jpg",
-      }}
-      resizeMode="cover"
-      className="flex-1 absolute top-0 bottom-0 left-0 right-0"
-    >
+    <ScrollView>
       <View className="p-2">
-        <View className="bg-black w-44 items-center rounded-lg">
-          <Text className="text-white font-bold text-lg">User profile</Text>
+        <View className="flex-row items-center">
+          <Image
+            source={{
+              uri: "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000",
+            }}
+            className="h-16 w-16 rounded-full z-30"
+          />
+          <View className="relative -left-3 bg-white w-80 h-10 items-center rounded-lg border-b-2 border-t-2 border-r-2">
+            <Text className="text-black font-bold ">User profile</Text>
+          </View>
         </View>
-        <View className="bg-black w-80 items-center rounded-lg mt-2">
-          <Text className="text-white font-bold text-lg">
-            Email : {auth.currentUser.email}
+        <View className="flex-row items-center mt-1">
+          <Image
+            source={{
+              uri: "https://m.media-amazon.com/images/I/31JCDJ7rZ5L.png",
+            }}
+            className="h-16 w-16 rounded-full z-30"
+          />
+          <View className="relative -left-3 bg-white w-80 items-center rounded-lg border-b-2 border-t-2 border-r-2">
+            <Text className="text-black font-bold ">
+              {auth.currentUser.email}
+            </Text>
+          </View>
+        </View>
+        <View className="flex-row items-center mt-1">
+          <Image
+            source={{
+              uri: "https://freeiconshop.com/wp-content/uploads/edd/phone-flat.png",
+            }}
+            className="w-16 h-16 rounded-full z-30"
+          />
+          <View className="relative -left-3 bg-white w-80 items-center rounded-lg border-b-2 border-t-2 border-r-2">
+            <Text className="text-black font-bold ">{userPhoneNumber}</Text>
+          </View>
+        </View>
+        <View className="bg-gray-600 w-44 items-center rounded-lg mt-2 self-center py-3">
+          <Text className="text-white font-bold">
+            {auth.currentUser.emailVerified ? (
+              <CheckIcon color={"#00ff00"} />
+            ) : (
+              "No"
+            )}
+            {"   "} : IsVerified
           </Text>
         </View>
-        <View className="bg-black w-44 items-center rounded-lg mt-2">
-          <Text className="text-white font-bold text-lg">
-            IsVerified : {auth.currentUser.emailVerified ? "Yes" : "No"}
+        <View className="bg-gray-600 w-80 self-center py-3 items-center rounded-lg mt-2">
+          <Text className="text-white font-bold ">
+            <ClipboardDocumentCheckIcon color={"#00ff00"} />
+            {"   "} : {myAppointment}
           </Text>
         </View>
-        <View className="bg-black w-96 items-center rounded-lg mt-2">
-          <Text className="text-white font-bold text-lg">
-            My appointment : {myAppointment}
-          </Text>
-        </View>
-
-        <View className="bg-black w-64 mr-1 items-center rounded-lg mt-2">
-          <Text className="text-white font-bold text-lg">
-            phone number : {userPhoneNumber}
-          </Text>
-        </View>
-        <View className="flex-row">
+        <View className="mt-20">
           <TextInput
             onChangeText={(text) => {
               setNewPhoneNumber(() => text);
             }}
-            placeholder="Chang you'r phone number"
+            placeholder="Enter now phone number"
             placeholderTextColor={"#FFFFFF"}
             inputMode="decimal"
-            className="px-3 text-lg text-white flex-1 mr-2 bg-black mt-2 border-red-400 border-2 rounded-md"
+            className="px-3 text-white mr-2 h-10 bg-gray-600 border-blue-400 border-2 rounded-md"
           />
           <TouchableOpacity
-            className="w-32 h-9 bg-red-500 rounded-lg mt-2 justify-center"
+            className="w-32 h-9 bg-red-500 rounded-lg mt-2 justify-center self-center"
             onPress={() => {
               if (
                 newPhoneNumber.length == 10 &&
@@ -134,7 +158,7 @@ export default function UserProfilePage() {
               } else {
                 Alert.alert(
                   "Change error",
-                  "you'r input is not correct please check you'r input"
+                  "you'r input is not correct please check it"
                 );
               }
             }}
@@ -145,6 +169,6 @@ export default function UserProfilePage() {
           </TouchableOpacity>
         </View>
       </View>
-    </ImageBackground>
+    </ScrollView>
   );
 }

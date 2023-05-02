@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, Alert } from "react-native";
 import { database, auth } from "../firebase";
 import {
   createUserWithEmailAndPassword,
@@ -60,6 +60,7 @@ function RegisterBody({ navigation }) {
         onChangeText={(current) => {
           setPhone(current);
         }}
+        inputMode="decimal"
         placeholder="enter your phone number"
         className="border-black border-2 w-4/5 h-16 pl-2 mb-7 rounded-md"
       ></TextInput>
@@ -83,7 +84,15 @@ function RegisterBody({ navigation }) {
 
       {/* signUp button */}
 
-      <TouchableOpacity onPress={() => register(email, password, name, phone)}>
+      <TouchableOpacity
+        onPress={() => {
+          Alert.alert(
+            "Success",
+            "We sent to you'r email a verifition message check it"
+          );
+          register(email, password, name, phone);
+        }}
+      >
         <View className="flex mt-5 bg-black w-40 h-10 justify-center items-center">
           <Text className="text-white">signUp</Text>
         </View>

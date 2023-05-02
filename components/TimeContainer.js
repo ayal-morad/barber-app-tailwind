@@ -64,7 +64,12 @@ export default function TimeContainer({ time, day, dataName }) {
         </TouchableOpacity>
       ) : (
         <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => setIsPressed(false)}>
+          <TouchableOpacity
+            onPress={() => {
+              setIsPressed(false);
+              setIsBookedA("Book");
+            }}
+          >
             <ChevronDoubleLeftIcon color={"#FF0000"} />
           </TouchableOpacity>
           <TouchableOpacity
