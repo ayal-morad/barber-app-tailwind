@@ -3,11 +3,10 @@ import {
   View,
   ScrollView,
   Image,
-  ImageBackground,
   TouchableOpacity,
-  TextInput,
   Alert,
 } from "react-native";
+import { TextInput } from "react-native-paper";
 import { resetPhoneNumber } from "../firebase";
 import { auth, database } from "../firebase";
 import { get, child, ref } from "firebase/database";
@@ -115,7 +114,7 @@ export default function UserProfilePage() {
             <Text className="text-black font-bold ">{userPhoneNumber}</Text>
           </View>
         </View>
-        <View className="bg-gray-600 w-44 items-center rounded-lg mt-2 self-center py-3">
+        <View className="bg-gray-600 w-44 items-center rounded-lg mt-2 self-start py-3">
           <Text className="text-white font-bold">
             {auth.currentUser.emailVerified ? (
               <CheckIcon color={"#00ff00"} />
@@ -125,7 +124,7 @@ export default function UserProfilePage() {
             {"   "} : IsVerified
           </Text>
         </View>
-        <View className="bg-gray-600 w-80 self-center py-3 items-center rounded-lg mt-2">
+        <View className="bg-gray-600 w-80 self-start py-3 items-center rounded-lg mt-2">
           <Text className="text-white font-bold ">
             <ClipboardDocumentCheckIcon color={"#00ff00"} />
             {"   "} : {myAppointment}
@@ -133,16 +132,16 @@ export default function UserProfilePage() {
         </View>
         <View className="mt-20">
           <TextInput
+            mode="outlined"
+            label="Enter now phone number"
             onChangeText={(text) => {
               setNewPhoneNumber(() => text);
             }}
-            placeholder="Enter now phone number"
-            placeholderTextColor={"#FFFFFF"}
-            inputMode="decimal"
-            className="px-3 text-white mr-2 h-10 bg-gray-600 border-blue-400 border-2 rounded-md"
+
+            className="px-3 text-white text-lg shadow-lg shadow-black mr-2 h-12 rounded-md"
           />
           <TouchableOpacity
-            className="w-32 h-9 bg-red-500 rounded-lg mt-2 justify-center self-center"
+            className="w-32 h-9 shadow-md shadow-black bg-red-500 rounded-lg mt-2 justify-center self-center"
             onPress={() => {
               if (
                 newPhoneNumber.length == 10 &&

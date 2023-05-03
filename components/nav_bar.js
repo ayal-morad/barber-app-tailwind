@@ -31,12 +31,13 @@ function NavBar() {
             return "";
           }
         })
-        .catch((error) => {});
+        .catch((error) => { });
     } else {
       return "";
     }
   });
   const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -46,7 +47,7 @@ function NavBar() {
               let flg = false;
               snapshot.forEach((child) => {
                 if (child.key === "username") {
-                  setUser(child.val());
+                  setUser(() => child.val());
                 }
                 if (child.key === "IsAdmin") {
                   if (child.val() === true) {
@@ -62,7 +63,7 @@ function NavBar() {
               setUser("");
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       } else {
         setUser(() => "");
       }
@@ -70,20 +71,23 @@ function NavBar() {
   });
 
   useEffect(() => {
-    if (auth.currentUser) {
-      onValue(
-        ref(database, `FirasApp/Users/${auth.currentUser.uid}/username`),
-        (snapshot) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        user.reload();
+        get(child(ref(database), `FirasApp/Users/${user.uid}/username`)).then((snapshot) => {
           if (snapshot.exists()) {
-            setUser(snapshot.val());
+            setUser(() => snapshot.val());
           }
-        }
-      );
-    }
+        }).catch();
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
-    <View className="flex-row mt-11 mx-1">
+    <View className="flex-row mt-6 mx-1">
       <View className="flex-row flex-1">
         <Image
           source={{
