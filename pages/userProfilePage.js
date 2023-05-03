@@ -138,7 +138,7 @@ export default function UserProfilePage() {
               setNewPhoneNumber(() => text);
             }}
 
-            className="px-3 text-white text-lg shadow-lg shadow-black mr-2 h-12 rounded-md"
+            className="px-3 text-white bg-white text-lg shadow-lg shadow-black mr-2 h-12 rounded-md"
           />
           <TouchableOpacity
             className="w-32 h-9 shadow-md shadow-black bg-red-500 rounded-lg mt-2 justify-center self-center"
