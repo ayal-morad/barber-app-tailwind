@@ -1,3 +1,6 @@
+// i made this to see how my database well be lock like
+//you can delete meee
+
 export const FirasData = {
   sunday: {
     date: "sun,25/4/2023",
